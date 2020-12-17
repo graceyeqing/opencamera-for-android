@@ -15,7 +15,6 @@
         android:layout_height="match_parent" />
 
     <ImageView
-        android:tint="@color/colorAccent"
         android:id="@+id/img_capture"
         android:layout_marginBottom="20dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +23,7 @@
         android:layout_height="70dp"
         android:src="@drawable/camera"
         app:layout_constraintBottom_toBottomOf="parent"
-        />
+        app:tint="@color/colorAccent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:visibility="invisible"
@@ -39,36 +38,36 @@
 
 
     <ImageView
-        android:tint="@android:color/white"
         android:layout_margin="20dp"
         android:id="@+id/img_switch"
         android:src="@drawable/ic_switch_camera"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="40dp"
-        android:layout_height="40dp" />
+        android:layout_height="40dp"
+        app:tint="@android:color/white" />
 
     <ImageView
         android:scaleType="center"
-        android:tint="@android:color/white"
         android:layout_margin="20dp"
         android:id="@+id/img_mode"
         android:src="@drawable/capture"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_switch"
         android:layout_width="40dp"
-        android:layout_height="40dp" />
+        android:layout_height="40dp"
+        app:tint="@android:color/white" />
 
     <ImageView
         android:scaleType="center"
-        android:tint="@android:color/white"
         android:layout_margin="20dp"
         android:id="@+id/img_filter"
         android:src="@drawable/filter"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_mode"
         android:layout_width="40dp"
-        android:layout_height="40dp" />
+        android:layout_height="40dp"
+        app:tint="@android:color/white" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
