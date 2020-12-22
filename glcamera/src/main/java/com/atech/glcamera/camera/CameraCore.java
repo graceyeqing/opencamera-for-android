@@ -113,6 +113,21 @@ public class CameraCore {
 
     }
 
+    //设置闪光灯
+    public void setFlashMode(boolean setOn){
+
+        if (mCamera!=null){
+            Camera.Parameters parameters = mCamera.getParameters();
+            if(setOn){
+                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+            }else{
+                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+            }
+
+            mCamera.setParameters(parameters);
+        }
+    }
+
     /**
      * *找出最接近的尺寸，以保证图像不会被拉伸
      * @param sizes

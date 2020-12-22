@@ -15,11 +15,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.atech.glcamera.camera.CameraCore;
+import com.atech.glcamera.views.GLCameraView;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final int CameraPermision = 100;
+
+    private int read;
+    private int write;
+    private int camera;
+    private int record;
     private Button btn1;
     private Button btn2;
+    private GLCameraView cameraView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +37,60 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btn1 = findViewById(R.id.btn1);
         btn2 = findViewById(R.id.btn2);
+        cameraView = findViewById(R.id.camera_view);
 
         btn1.setOnClickListener(this);
         btn2.setOnClickListener(this);
 
+
     }
+
+
+    /**
+     * Check if this device has a camera
+     */
+    private boolean checkCameraHardware(Context context) {
+        // this device has a camera
+// no camera on this device
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+
+    }
+
+    private boolean checkPemission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            read = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+            write = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            camera = checkSelfPermission(Manifest.permission.CAMERA);
+            record = checkSelfPermission(Manifest.permission.RECORD_AUDIO);
+
+            if (read != PackageManager.PERMISSION_GRANTED
+                    || write != PackageManager.PERMISSION_GRANTED
+                    || camera != PackageManager.PERMISSION_GRANTED
+                    || record != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA,
+                                Manifest.permission.RECORD_AUDIO
+
+                        },
+                        CameraPermision);
+
+
+                return false;
+
+            }
+
+        }
+
+        return true;
+
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -56,6 +114,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
+        switch (v.getId()){
+
+
+            case R.id.btn1:
+
+                //打开闪光灯
+
+                cameraView.setFlashMode(true);
+                break;
+
+            case R.id.btn2:
+                //关闭闪光
+                cameraView.setFlashMode(false);
+
+                break;
+
+        }
 
     }
 }

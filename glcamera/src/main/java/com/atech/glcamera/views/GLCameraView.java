@@ -94,6 +94,14 @@ public class GLCameraView extends GLSurfaceView {
         }
     }
 
+
+    //设置闪光灯
+    public void setFlashMode(boolean setOn){
+        if (mCameraHelper!=null){
+            mCameraHelper.setFlashMode(setOn);
+        }
+    }
+
     public class GLRenderer implements Renderer,SurfaceTexture.OnFrameAvailableListener {
 
 
