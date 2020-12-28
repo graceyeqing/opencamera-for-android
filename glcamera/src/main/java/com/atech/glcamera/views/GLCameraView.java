@@ -1,5 +1,6 @@
 package com.atech.glcamera.views;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
@@ -137,18 +138,18 @@ public class GLCameraView extends GLSurfaceView {
         @Override
         public void onSurfaceChanged(GL10 gl, int width, int height) {
 
+            if(mCameraHelper != null){
+                GLES20.glViewport(0, 0, width, height);
 
-            GLES20.glViewport(0, 0, width, height);
+                mCameraHelper.openCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
+                mCurrentFilter.createProgram();
+                mCurrentFilter.onInputSizeChanged(getWidth(),getHeight());
 
-            mCameraHelper.openCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
-            mCurrentFilter.createProgram();
-            mCurrentFilter.onInputSizeChanged(getWidth(),getHeight());
-
-            mTextureId = BaseFilter.bindTexture();
-            mSurfaceTexture = new SurfaceTexture(mTextureId);
-            mSurfaceTexture.setOnFrameAvailableListener(this);
-            mCameraHelper.startPreview(mSurfaceTexture);
-
+                mTextureId = BaseFilter.bindTexture();
+                mSurfaceTexture = new SurfaceTexture(mTextureId);
+                mSurfaceTexture.setOnFrameAvailableListener(this);
+                mCameraHelper.startPreview(mSurfaceTexture);
+            }
 
         }
 
@@ -159,6 +160,7 @@ public class GLCameraView extends GLSurfaceView {
          * 这里我采用了前者
          */
 
+        @SuppressLint("NewApi")
         @Override
         public void onDrawFrame(GL10 gl) {
 
