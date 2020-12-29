@@ -18,6 +18,8 @@ import com.atech.glcamera.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -119,10 +121,27 @@ public class CameraCore {
         try {
             if (mCamera != null) {
                 Camera.Parameters parameters = mCamera.getParameters();
-                if (setOn) {
-                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-                } else {
-                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                if (parameters != null) {
+                    List<String> supportedFlashModes = parameters.getSupportedFlashModes();
+                    String flashMode;
+                    if (setOn) {
+                        flashMode = findSettableValue("flash mode",
+                                supportedFlashModes,
+                                Camera.Parameters.FLASH_MODE_TORCH,
+                                Camera.Parameters.FLASH_MODE_ON);
+                    } else {
+                        flashMode = findSettableValue("flash mode",
+                                supportedFlashModes,
+                                Camera.Parameters.FLASH_MODE_OFF);
+                    }
+                    if (flashMode != null) {
+                        if (flashMode.equals(parameters.getFlashMode())) {
+                            Log.i("glcamera", "Flash mode already set to " + flashMode);
+                        } else {
+                            Log.i("glcamera", "Setting flash mode to " + flashMode);
+                            parameters.setFlashMode(flashMode);
+                        }
+                    }
                 }
 
                 mCamera.setParameters(parameters);
@@ -130,6 +149,38 @@ public class CameraCore {
         }catch (Exception e){
             Log.v("glcamera", e.getMessage());
         }
+
+
+    }
+
+    public boolean getTorchState() {
+        if (mCamera != null) {
+            Camera.Parameters parameters = mCamera.getParameters();
+            if (parameters != null) {
+                String flashMode = parameters.getFlashMode();
+                return flashMode != null &&
+                        (Camera.Parameters.FLASH_MODE_ON.equals(flashMode) ||
+                                Camera.Parameters.FLASH_MODE_TORCH.equals(flashMode));
+            }
+        }
+        return false;
+    }
+
+    private static String findSettableValue(String name,
+                                            Collection<String> supportedValues,
+                                            String... desiredValues) {
+        Log.i("glcamera", "Requesting " + name + " value from among: " + Arrays.toString(desiredValues));
+        Log.i("glcamera", "Supported " + name + " values: " + supportedValues);
+        if (supportedValues != null) {
+            for (String desiredValue : desiredValues) {
+                if (supportedValues.contains(desiredValue)) {
+                    Log.i("glcamera", "Can set " + name + " to: " + desiredValue);
+                    return desiredValue;
+                }
+            }
+        }
+        Log.i("glcamera", "No supported values match");
+        return null;
     }
 
     /**
