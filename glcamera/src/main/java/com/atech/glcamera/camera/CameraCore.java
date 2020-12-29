@@ -51,41 +51,41 @@ public class CameraCore {
 
     public void openCamera(int mCameraId0){
 
-
             try {
 
                 mCameraId = mCameraId0;
                 mCamera = Camera.open(mCameraId0);
 
+                if(mCamera != null){
+                    Camera.Parameters parameters = mCamera.getParameters();
 
-                Camera.Parameters parameters = mCamera.getParameters();
+                    if (parameters.getSupportedFocusModes().contains(
+                            Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
+                        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                    }
 
-                if (parameters.getSupportedFocusModes().contains(
-                        Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
-                    parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                    //1.设置预览尺寸，防止预览画面变形
+                    List<Camera.Size> sizes1 = parameters.getSupportedPreviewSizes(); //得到的比例，宽是大头
+                    int[] result1 = getOptimalSize(sizes1, surfaceView.getWidth(), surfaceView.getHeight());
+                    parameters.setPreviewSize(result1[0], result1[1]);
+                    fitWidth = result1[0];
+                    fitHeight = result1[1];
+
+                    //2.设置拍照取得的图片尺寸
+                    List<Camera.Size>sizes2 = parameters.getSupportedPictureSizes();
+                    int[] result2 = getOptimalSize(sizes2,surfaceView.getWidth(),surfaceView.getHeight());
+                    parameters.setPictureSize(result2[0],result2[1]);
+
+                    //3.得到video尺寸，传给mediarecorder
+                    List<Camera.Size>sizes3 = parameters.getSupportedVideoSizes();
+                    videoSizes=getOptimalSize(sizes3,surfaceView.getWidth(),surfaceView.getHeight());
+
+                    mCamera.setParameters(parameters);
+
+                    //设置相机方向
+                    setCameraDisplayOrientation(mCameraId);
                 }
 
-                //1.设置预览尺寸，防止预览画面变形
-                List<Camera.Size> sizes1 = parameters.getSupportedPreviewSizes(); //得到的比例，宽是大头
-                int[] result1 = getOptimalSize(sizes1, surfaceView.getWidth(), surfaceView.getHeight());
-                parameters.setPreviewSize(result1[0], result1[1]);
-                fitWidth = result1[0];
-                fitHeight = result1[1];
-
-                //2.设置拍照取得的图片尺寸
-                List<Camera.Size>sizes2 = parameters.getSupportedPictureSizes();
-                int[] result2 = getOptimalSize(sizes2,surfaceView.getWidth(),surfaceView.getHeight());
-                parameters.setPictureSize(result2[0],result2[1]);
-
-                //3.得到video尺寸，传给mediarecorder
-                List<Camera.Size>sizes3 = parameters.getSupportedVideoSizes();
-                videoSizes=getOptimalSize(sizes3,surfaceView.getWidth(),surfaceView.getHeight());
-
-
-                mCamera.setParameters(parameters);
-
-                //设置相机方向
-                setCameraDisplayOrientation(mCameraId);
 
             }catch (Exception e){
 
@@ -289,10 +289,11 @@ public class CameraCore {
             texture = texture0;
 
             try {
-                mCamera.setPreviewTexture(texture);
-                mCamera.startPreview();
-
-            } catch (IOException e) {
+                if(mCamera != null){
+                    mCamera.setPreviewTexture(texture);
+                    mCamera.startPreview();
+                }
+            } catch (Exception e) {
                 Log.v("glcamera",e.getMessage());
             }
 
