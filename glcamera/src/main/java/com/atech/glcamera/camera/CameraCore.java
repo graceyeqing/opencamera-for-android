@@ -57,30 +57,36 @@ public class CameraCore {
                 mCamera = Camera.open(mCameraId0);
 
                 if(mCamera != null){
-                    Camera.Parameters parameters = mCamera.getParameters();
-
-                    if (parameters.getSupportedFocusModes().contains(
-                            Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
-                        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                    Camera.Parameters parameters = null;
+                    if (mCamera.getParameters()!=null) {
+                        parameters = mCamera.getParameters();
                     }
 
-                    //1.设置预览尺寸，防止预览画面变形
-                    List<Camera.Size> sizes1 = parameters.getSupportedPreviewSizes(); //得到的比例，宽是大头
-                    int[] result1 = getOptimalSize(sizes1, surfaceView.getWidth(), surfaceView.getHeight());
-                    parameters.setPreviewSize(result1[0], result1[1]);
-                    fitWidth = result1[0];
-                    fitHeight = result1[1];
+                    if(parameters != null){
+                        if (parameters.getSupportedFocusModes().contains(
+                                Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
+                            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                        }
 
-                    //2.设置拍照取得的图片尺寸
-                    List<Camera.Size>sizes2 = parameters.getSupportedPictureSizes();
-                    int[] result2 = getOptimalSize(sizes2,surfaceView.getWidth(),surfaceView.getHeight());
-                    parameters.setPictureSize(result2[0],result2[1]);
+                        //1.设置预览尺寸，防止预览画面变形
+                        List<Camera.Size> sizes1 = parameters.getSupportedPreviewSizes(); //得到的比例，宽是大头
+                        int[] result1 = getOptimalSize(sizes1, surfaceView.getWidth(), surfaceView.getHeight());
+                        parameters.setPreviewSize(result1[0], result1[1]);
+                        fitWidth = result1[0];
+                        fitHeight = result1[1];
 
-                    //3.得到video尺寸，传给mediarecorder
-                    List<Camera.Size>sizes3 = parameters.getSupportedVideoSizes();
-                    videoSizes=getOptimalSize(sizes3,surfaceView.getWidth(),surfaceView.getHeight());
+                        //2.设置拍照取得的图片尺寸
+                        List<Camera.Size>sizes2 = parameters.getSupportedPictureSizes();
+                        int[] result2 = getOptimalSize(sizes2,surfaceView.getWidth(),surfaceView.getHeight());
+                        parameters.setPictureSize(result2[0],result2[1]);
 
-                    mCamera.setParameters(parameters);
+                        //3.得到video尺寸，传给mediarecorder
+                        List<Camera.Size>sizes3 = parameters.getSupportedVideoSizes();
+                        videoSizes=getOptimalSize(sizes3,surfaceView.getWidth(),surfaceView.getHeight());
+
+                        mCamera.setParameters(parameters);
+                    }
+
 
                     //设置相机方向
                     setCameraDisplayOrientation(mCameraId);
@@ -120,7 +126,10 @@ public class CameraCore {
 
         try {
             if (mCamera != null) {
-                Camera.Parameters parameters = mCamera.getParameters();
+                Camera.Parameters parameters = null;
+                if (mCamera.getParameters()!=null) {
+                    parameters = mCamera.getParameters();
+                }
                 if (parameters != null) {
                     List<String> supportedFlashModes = parameters.getSupportedFlashModes();
                     String flashMode;
@@ -155,7 +164,10 @@ public class CameraCore {
 
     public boolean getTorchState() {
         if (mCamera != null) {
-            Camera.Parameters parameters = mCamera.getParameters();
+            Camera.Parameters parameters = null;
+            if (mCamera.getParameters()!=null) {
+                parameters = mCamera.getParameters();
+            }
             if (parameters != null) {
                 String flashMode = parameters.getFlashMode();
                 return flashMode != null &&
