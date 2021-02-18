@@ -36,6 +36,7 @@ public class CameraCore {
     public int fitWidth;
     public int fitHeight;
     public int videoSizes[] = new int[2];
+    private Camera.Parameters parameters;
 
     
     public CameraCore(SurfaceView surfaceView) {
@@ -57,7 +58,6 @@ public class CameraCore {
                 mCamera = Camera.open(mCameraId0);
 
                 if(mCamera != null){
-                    Camera.Parameters parameters = null;
                     if (mCamera.getParameters()!=null) {
                         parameters = mCamera.getParameters();
                     }
@@ -126,10 +126,6 @@ public class CameraCore {
 
         try {
             if (mCamera != null) {
-                Camera.Parameters parameters = null;
-                if (mCamera.getParameters()!=null) {
-                    parameters = mCamera.getParameters();
-                }
                 if (parameters != null) {
                     List<String> supportedFlashModes = parameters.getSupportedFlashModes();
                     String flashMode;
@@ -164,10 +160,6 @@ public class CameraCore {
 
     public boolean getTorchState() {
         if (mCamera != null) {
-            Camera.Parameters parameters = null;
-            if (mCamera.getParameters()!=null) {
-                parameters = mCamera.getParameters();
-            }
             if (parameters != null) {
                 String flashMode = parameters.getFlashMode();
                 return flashMode != null &&

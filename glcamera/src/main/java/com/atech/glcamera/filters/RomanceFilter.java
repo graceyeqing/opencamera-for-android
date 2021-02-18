@@ -3,6 +3,7 @@ package com.atech.glcamera.filters;
 import android.content.Context;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
+import android.opengl.GLES30;
 
 
 import com.atech.glcamera.R;
