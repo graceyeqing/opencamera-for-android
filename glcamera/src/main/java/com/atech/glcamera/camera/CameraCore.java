@@ -290,9 +290,8 @@ public class CameraCore {
 
     public void startPreview(SurfaceTexture texture0) {
 
-            texture = texture0;
-
             try {
+                texture = texture0;
                 if(mCamera != null){
                     mCamera.setPreviewTexture(texture);
                     mCamera.startPreview();

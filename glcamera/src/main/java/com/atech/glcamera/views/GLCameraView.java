@@ -140,17 +140,21 @@ public class GLCameraView extends GLSurfaceView {
         @Override
         public void onSurfaceChanged(GL10 gl, int width, int height) {
 
-            if (mCameraHelper != null) {
-                GLES20.glViewport(0, 0, width, height);
+            try {
+                if (mCameraHelper != null) {
+                    GLES20.glViewport(0, 0, width, height);
 
-                mCameraHelper.openCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
-                mCurrentFilter.createProgram();
-                mCurrentFilter.onInputSizeChanged(getWidth(), getHeight());
+                    mCameraHelper.openCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
+                    mCurrentFilter.createProgram();
+                    mCurrentFilter.onInputSizeChanged(getWidth(), getHeight());
 
-                mTextureId = BaseFilter.bindTexture();
-                mSurfaceTexture = new SurfaceTexture(mTextureId);
-                mSurfaceTexture.setOnFrameAvailableListener(this);
-                mCameraHelper.startPreview(mSurfaceTexture);
+                    mTextureId = BaseFilter.bindTexture();
+                    mSurfaceTexture = new SurfaceTexture(mTextureId);
+                    mSurfaceTexture.setOnFrameAvailableListener(this);
+                    mCameraHelper.startPreview(mSurfaceTexture);
+                }
+            }catch ( Exception e){
+                Log.d("glcamera",e.getMessage());
             }
 
         }
